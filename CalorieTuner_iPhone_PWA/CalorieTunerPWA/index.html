@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#147d64">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="カロリーチューナー">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>カロリーチューナー</title>
+<style>
+:root{--green:#147d64;--green2:#e6f5ef;--ink:#172923;--muted:#64746e;--line:#e1e9e5;--bg:#f4f7f5;--card:#fff;--orange:#b86a16;--shadow:0 8px 26px #17382b0b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.45}
+button,input,select{font:inherit}button{cursor:pointer}
+.app{max-width:780px;margin:0 auto;padding:0 14px 40px}
+header{padding:22px 4px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:11px}.logo{height:43px;width:43px;border-radius:15px;background:var(--green);color:white;display:grid;place-items:center;font-size:23px}
+h1{font-size:21px;margin:0;letter-spacing:-.4px}.sub{font-size:12px;color:var(--muted);margin-top:3px}
+.pill{background:var(--green2);color:var(--green);padding:7px 10px;border-radius:99px;font-size:12px;font-weight:700}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:19px;padding:16px;box-shadow:var(--shadow);margin-bottom:12px;min-width:0}
+.hero{background:linear-gradient(135deg,#126d58,#229878);color:white;border:0;padding:19px}.hero .muted{color:#d6f1e8}.hero .big{font-size:34px;font-weight:800;letter-spacing:-1px}.heroTop{display:flex;justify-content:space-between;gap:12px;align-items:start}.hero .goal{font-size:13px;text-align:right}
+.sectionTitle{font-weight:800;font-size:16px;margin:0 0 12px;display:flex;align-items:center;gap:8px}
+.label{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:5px;display:block}
+.metric{font-size:25px;font-weight:800;letter-spacing:-.6px}.unit{font-size:12px;color:var(--muted);font-weight:500}.metricrow{display:flex;align-items:baseline;gap:5px}
+.mini{font-size:12px;color:var(--muted)}.hero .mini{color:#d6f1e8}
+.progress{height:8px;background:#ffffff44;border-radius:99px;overflow:hidden;margin:11px 0 6px}.progress span{height:100%;display:block;background:#fff;border-radius:99px}
+.btn{border:0;background:var(--green);color:white;border-radius:12px;padding:11px 14px;font-weight:750;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+.btn.secondary{background:var(--green2);color:var(--green)}.btn.ghost{background:#f0f4f2;color:var(--ink)}.btn.full{width:100%}.btn.small{padding:8px 10px;font-size:13px}
+input,select{width:100%;border:1px solid #d8e2dd;border-radius:11px;padding:11px 12px;background:white;color:var(--ink);outline-color:var(--green)}
+.formrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}.formrow.one{grid-template-columns:1fr}
+.actions{display:flex;gap:8px;flex-wrap:wrap}.note{background:#fff8e9;border:1px solid #f4dfb5;color:#78501a;border-radius:12px;padding:10px 12px;font-size:12px}
+.photoBox{border:1.5px dashed #b9d7ca;background:#f7fcf9;border-radius:15px;padding:13px;text-align:center}
+.photoBox input{border:0;padding:8px;background:transparent}.preview{max-width:100%;max-height:240px;border-radius:12px;margin-top:8px;object-fit:contain}
+.meal{display:flex;gap:11px;padding:10px 0;border-bottom:1px solid var(--line);align-items:center}.meal:last-child{border-bottom:0}.thumb{width:55px;height:55px;object-fit:cover;border-radius:12px;background:#edf2ef;flex-shrink:0}.mealInfo{min-width:0;flex:1}.mealName{font-weight:750;overflow-wrap:anywhere}.mealMeta{font-size:12px;color:var(--muted)}.mealKcal{font-weight:800;white-space:nowrap}
+.empty{font-size:13px;color:var(--muted);padding:8px 0}
+.chart{width:100%;height:150px;display:block}.tabbar{display:flex;gap:7px;margin:0 0 13px;overflow:auto}.tab{border:1px solid var(--line);background:white;border-radius:99px;padding:9px 13px;color:var(--muted);font-weight:700;white-space:nowrap}.tab.active{background:var(--green);border-color:var(--green);color:white}
+.footer{font-size:11px;color:var(--muted);text-align:center;padding:12px 8px}
+details summary{font-weight:750;cursor:pointer}.status{font-size:12px;color:var(--muted);margin-top:8px;overflow-wrap:anywhere}
+.hidden{display:none!important}
+@media(max-width:520px){.app{padding:0 10px 28px}.card{padding:14px;border-radius:17px}.grid{gap:9px}.metric{font-size:22px}.hero .big{font-size:30px}.pill{display:none}.formrow{gap:8px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+ <div class="brand"><div class="logo">↗</div><div><h1>カロリーチューナー</h1><div class="sub">食事・歩数・体重を、あなたに合わせて調整</div></div></div>
+ <div class="pill">端末内に保存</div>
+</header>
+<nav class="tabbar">
+ <button class="tab active" data-tab="home">今日</button><button class="tab" data-tab="meals">食事記録</button><button class="tab" data-tab="weight">体重・補正</button><button class="tab" data-tab="settings">プロフィール</button>
+</nav>
+<main id="view"></main>
+<div class="footer">試作品 v0.1 · 記録はこのブラウザ内に保存されます。ブラウザデータを消去すると記録も消える場合があります。</div>
+</div>
+<input id="quickPhoto" type="file" accept="image/*" capture="environment" class="hidden">
+<script>
+const $ = s => document.querySelector(s);
+const dayKey = d => {const x=new Date(d);return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`};
+const today = () => dayKey(new Date());
+const fmt = n => Math.round(n||0).toLocaleString('ja-JP');
+const safe = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const defaults={profile:{height:165,age:35,sex:'未設定',startWeight:75,currentWeight:75,goalWeight:65},meals:[],weights:[],steps:{},aiEndpoint:''};
+let data=load(), activeTab='home', photoData='', photoName='';
+function load(){try{return {...defaults,...JSON.parse(localStorage.getItem('calorieTuner')||'{}')};}catch{return structuredClone(defaults)}}
+function save(){localStorage.setItem('calorieTuner',JSON.stringify(data))}
+function bmr(){const p=data.profile,base=10*p.currentWeight+6.25*p.height-5*p.age;return Math.max(900,base+(p.sex==='男性'?5:p.sex==='女性'?-161:-78))}
+function walking(steps){const p=data.profile,stride=Math.max(.5,p.height/100*.415);return Math.max(0,steps*stride/1000*p.currentWeight*.5)}
+function intake(day=today()){return data.meals.filter(m=>m.day===day).reduce((s,m)=>s+Number(m.calories||0),0)}
+function getSteps(day=today()){return Number(data.steps[day]||0)}
+function weightDelta(){if(data.weights.length<2)return null;const a=data.weights[0],b=data.weights[data.weights.length-1];return {delta:b.weight-a.weight,days:Math.max(1,Math.round((new Date(b.day)-new Date(a.day))/86400000))}}
+function calibration(){
+ const end=new Date(),start=new Date();start.setDate(end.getDate()-14);
+ const ms=data.meals.filter(m=>new Date(m.day+'T12:00:00')>=start&&new Date(m.day+'T12:00:00')<=end);
+ const days=new Set(ms.map(m=>m.day)).size;
+ const ws=data.weights.filter(w=>new Date(w.day+'T12:00:00')>=start&&new Date(w.day+'T12:00:00')<=end).sort((a,b)=>a.day.localeCompare(b.day));
+ if(days<10||ws.length<2)return null;
+ const daysBetween=Math.max(1,(new Date(ws.at(-1).day)-new Date(ws[0].day))/86400000);
+ if(daysBetween<10)return null;
+ const avg=ms.reduce((s,m)=>s+Number(m.calories),0)/14;
+ const estimate=avg-((ws.at(-1).weight-ws[0].weight)*7700/daysBetween);
+ return Math.max(1000,Math.min(4500,estimate));
+}
+function burn(day=today()){
+ const calibrated=calibration(),steps=getSteps(day);
+ if(calibrated){const stride=Math.max(.5,data.profile.height/100*.415),delta=(steps-4000)*stride/1000*data.profile.currentWeight*.5;return Math.max(0,Math.round(calibrated+delta))}
+ return Math.round(bmr()*1.2+walking(steps));
+}
+function progress(){const p=data.profile,den=p.startWeight-p.goalWeight;if(!den)return 0;return Math.max(0,Math.min(1,(p.startWeight-p.currentWeight)/den))}
+function card(title,body,extra=''){return `<section class="card ${extra}"><h2 class="sectionTitle">${title}</h2>${body}</section>`}
+function home(){
+ const remaining=burn()-intake(),p=data.profile;
+ return `<section class="card hero"><div class="heroTop"><div><div class="mini">現在の体重</div><div class="metricrow"><span class="big">${Number(p.currentWeight).toFixed(1)}</span><span>kg</span></div></div><div class="goal"><div class="muted">目標体重</div><b>${Number(p.goalWeight).toFixed(1)} kg</b></div></div><div class="progress"><span style="width:${progress()*100}%"></span></div><div class="mini">${p.startWeight.toFixed(1)} kg から目標まで · 達成 ${(progress()*100).toFixed(0)}%</div></section>
+ <div class="grid">
+ ${metricCard('摂取カロリー',intake(),'kcal','🥗')}
+ ${metricCard('推定総消費',burn(),'kcal','🔥')}
+ ${metricCard('今日の歩数',getSteps().toLocaleString(),'歩','👟')}
+ ${metricCard('消費−摂取',remaining,'kcal',remaining>=0?'↘':'↗')}
+ </div>
+ ${card('今日の歩数を記録',`<div class="formrow"><div><label class="label">歩数（iPhoneのヘルスケアから確認）</label><input id="stepsInput" type="number" min="0" value="${getSteps()}"></div><div style="display:flex;align-items:end"><button class="btn full" id="saveSteps">歩数を保存</button></div></div><div class="note">Windows版の試作品はApple HealthKitに直接接続できません。まず歩数を入力する方式です。</div>`)}
+ ${card('食事を写真で記録',photoForm())}
+ ${card('今日の食事',mealList(data.meals.filter(m=>m.day===today())))}
+ ${card('推定のしくみ',`<p class="mini">初期値は基礎代謝の推定＋日常活動＋歩行の概算です。食事と体重の記録が14日間以上そろうと、体重傾向による補正値を計算します。</p><button class="btn secondary full" id="goWeight">体重・補正を見る</button>`)}
+ `;
+}
+function metricCard(t,v,u,emoji){return `<section class="card"><div class="label">${emoji} ${t}</div><div class="metricrow"><span class="metric">${fmt(v)}</span><span class="unit">${u}</span></div></section>`}
+function photoForm(){return `<div class="photoBox"><div style="font-size:26px">📷</div><b>食事の写真を選ぶ</b><div class="mini">カメラ撮影または写真ライブラリ</div><input id="mealPhoto" type="file" accept="image/*" capture="environment"><img id="preview" class="preview ${photoData?'':'hidden'}" src="${photoData||''}" alt="食事写真"></div>
+ <div class="formrow" style="margin-top:12px"><div><label class="label">料理名</label><input id="mealName" placeholder="例：沖縄そば"></div><div><label class="label">推定カロリー（kcal）</label><input id="mealCalories" type="number" min="1" placeholder="例：650"></div></div>
+ <div class="formrow one"><div><label class="label">メモ（量・トッピングなど）</label><input id="mealNotes" placeholder="例：麺大盛り、三枚肉3枚"></div></div>
+ <div class="actions"><button class="btn secondary" id="estimateAI">✨ AIで判定</button><button class="btn" id="saveMeal">食事を保存</button></div>
+ <div id="aiStatus" class="status">${data.aiEndpoint?'AI接続先が設定されています。':'AI判定にはAIサービスの接続設定が必要です。写真の保存と手入力はすぐ使えます。'}</div>
+ <details style="margin-top:12px"><summary>AI判定の接続設定</summary><p class="mini">HTTPSのAIバックエンドURLを入力してください。APIキーをこの画面やブラウザに直接置かないでください。</p><label class="label">AIエンドポイントURL</label><input id="aiEndpoint" placeholder="https://example.com/estimate" value="${safe(data.aiEndpoint)}"><button class="btn secondary small" id="saveEndpoint" style="margin-top:8px">接続先を保存</button><p class="mini">API契約：写真ファイルをPOSTし、{ "mealName": "沖縄そば", "calories": 650, "explanation": "推定理由" } のJSONを返すURL。</p></details>`}
+function mealList(meals){if(!meals.length)return '<div class="empty">まだ食事の記録はありません。写真を選んで記録してみよう。</div>';return meals.slice().sort((a,b)=>b.created.localeCompare(a.created)).map(m=>`<div class="meal">${m.photo?`<img class="thumb" src="${m.photo}" alt="">`:'<div class="thumb" style="display:grid;place-items:center">🍽️</div>'}<div class="mealInfo"><div class="mealName">${safe(m.name)}</div><div class="mealMeta">${safe(m.day)}${m.notes?' · '+safe(m.notes):''}</div></div><div class="mealKcal">${fmt(m.calories)} kcal</div><button class="btn ghost small deleteMeal" data-id="${m.id}" aria-label="削除">×</button></div>`).join('')}
+function mealsView(){return `${card('食事を追加',photoForm())}${card('すべての食事記録',mealList(data.meals))}`}
+function weightView(){
+ const d=weightDelta(),c=calibration();
+ return `${card('体重を記録',`<div class="formrow"><div><label class="label">測定日</label><input type="date" id="weightDay" value="${today()}"></div><div><label class="label">体重（kg）</label><input type="number" id="weightValue" step=".1" min="25" max="350" placeholder="${data.profile.currentWeight}"></div></div><button class="btn full" id="saveWeight">体重を保存</button><p class="mini">できれば毎週同じ曜日・同じ条件で測定してください。</p>`)}
+ ${card('体重の推移',weightChart())}
+ ${card('消費カロリーの補正',c?`<div class="metricrow"><span class="metric">${fmt(c)}</span><span class="unit">kcal/日（推定）</span></div><p class="mini">14日間の食事記録と体重傾向をもとに推定。日々の歩数は基準4,000歩との差分を加味しています。</p>`:`<div class="note">補正値はまだ計算できません。直近14日間で10日以上の食事記録と、10日以上離れた2回以上の体重記録が必要です。</div>`)}
+ ${card('記録履歴',data.weights.length?data.weights.slice().reverse().map(w=>`<div class="meal"><div class="mealInfo"><b>${safe(w.day)}</b></div><div class="mealKcal">${Number(w.weight).toFixed(1)} kg</div><button class="btn ghost small deleteWeight" data-id="${w.id}">×</button></div>`).join(''):'<div class="empty">体重記録はまだありません。</div>')}`;
+}
+function weightChart(){
+ const ws=data.weights.slice().sort((a,b)=>a.day.localeCompare(b.day));
+ if(ws.length<2)return '<div class="empty">グラフを表示するには、体重を2回以上記録してください。</div>';
+ const vals=ws.map(w=>w.weight),min=Math.min(...vals)-.5,max=Math.max(...vals)+.5,range=max-min||1;
+ const pts=ws.map((w,i)=>`${20+i*660/(ws.length-1)},${125-(w.weight-min)/range*95}`).join(' ');
+ return `<svg class="chart" viewBox="0 0 700 150" role="img" aria-label="体重の推移グラフ"><line x1="20" y1="125" x2="680" y2="125" stroke="#dfe8e3"/><polyline points="${pts}" fill="none" stroke="#147d64" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>${ws.map((w,i)=>`<circle cx="${20+i*660/(ws.length-1)}" cy="${125-(w.weight-min)/range*95}" r="5" fill="#147d64"/>`).join('')}<text x="20" y="15" font-size="13" fill="#64746e">${Number(max-.5).toFixed(1)} kg</text><text x="20" y="145" font-size="12" fill="#64746e">${safe(ws[0].day)}</text><text x="680" y="145" text-anchor="end" font-size="12" fill="#64746e">${safe(ws.at(-1).day)}</text></svg>`;
+}
+function settingsView(){const p=data.profile;return `${card('プロフィール',`<div class="formrow"><div><label class="label">身長（cm）</label><input id="height" type="number" value="${p.height}"></div><div><label class="label">年齢</label><input id="age" type="number" value="${p.age}"></div></div><div class="formrow"><div><label class="label">性別（基礎代謝の概算用）</label><select id="sex"><option ${p.sex==='未設定'?'selected':''}>未設定</option><option ${p.sex==='男性'?'selected':''}>男性</option><option ${p.sex==='女性'?'selected':''}>女性</option></select></div><div><label class="label">開始時の体重（kg）</label><input id="startWeight" type="number" step=".1" value="${p.startWeight}"></div></div><div class="formrow"><div><label class="label">現在の体重（kg）</label><input id="currentWeight" type="number" step=".1" value="${p.currentWeight}"></div><div><label class="label">目標体重（kg）</label><input id="goalWeight" type="number" step=".1" value="${p.goalWeight}"></div></div><button class="btn full" id="saveProfile">プロフィールを保存</button>`)}
+ ${card('データ管理',`<p class="mini">記録はこのブラウザのlocalStorageに保存します。プライベートブラウズやブラウザデータ消去で失われる可能性があります。</p><div class="actions"><button class="btn secondary" id="exportData">バックアップを書き出す</button><label class="btn ghost" for="importFile">バックアップを読み込む</label><input id="importFile" type="file" accept="application/json" class="hidden"></div><p style="margin-top:12px"><button class="btn ghost" id="clearData">すべての記録を削除</button></p>`)}
+ ${card('計算について',`<p class="mini">基礎代謝はMifflin-St Jeor式の概算。歩行消費は歩幅と体重から粗く推定します。体重1 kg ≈ 7,700 kcalという仮定も近似であり、水分変動・記録漏れ・料理量の誤差があります。補正値は参考値で、診断や医療上の助言ではありません。</p>`)}
+ `}
+function render(){const v=$('#view');v.innerHTML=activeTab==='home'?home():activeTab==='meals'?mealsView():activeTab==='weight'?weightView():settingsView();bindView()}
+function bindView(){
+ $('#saveSteps')?.addEventListener('click',()=>{const n=Number($('#stepsInput').value);if(Number.isFinite(n)&&n>=0){data.steps[today()]=Math.floor(n);save();render()}});
+ $('#mealPhoto')?.addEventListener('change',async e=>{const f=e.target.files?.[0];if(!f)return;photoName=f.name;photoData=await resizeImage(f);const img=$('#preview');img.src=photoData;img.classList.remove('hidden');$('#aiStatus').textContent='写真を読み込みました。AI判定を押すか、料理名とカロリーを入力してください。'});
+ $('#estimateAI')?.addEventListener('click',estimateAI);
+ $('#saveMeal')?.addEventListener('click',()=>{const name=$('#mealName').value.trim(),cal=Number($('#mealCalories').value);if(!name||!Number.isFinite(cal)||cal<=0){$('#aiStatus').textContent='料理名と正のカロリーを入力してください。';return}data.meals.push({id:crypto.randomUUID(),day:today(),created:new Date().toISOString(),name,calories:Math.round(cal),notes:$('#mealNotes').value.trim(),photo:photoData});save();photoData='';photoName='';render()});
+ $('#saveEndpoint')?.addEventListener('click',()=>{data.aiEndpoint=$('#aiEndpoint').value.trim();save();$('#aiStatus').textContent=data.aiEndpoint?'AI接続先を保存しました。':'接続先を空にしました。';});
+ $('#goWeight')?.addEventListener('click',()=>setTab('weight'));
+ $('#saveWeight')?.addEventListener('click',()=>{const weight=Number($('#weightValue').value),day=$('#weightDay').value;if(!day||!Number.isFinite(weight)||weight<25||weight>350){alert('測定日と25〜350kgの体重を入力してください。');return}data.weights=data.weights.filter(w=>w.day!==day);data.weights.push({id:crypto.randomUUID(),day,weight});data.weights.sort((a,b)=>a.day.localeCompare(b.day));data.profile.currentWeight=weight;save();render()});
+ $('#saveProfile')?.addEventListener('click',()=>{const n={height:Number($('#height').value),age:Number($('#age').value),sex:$('#sex').value,startWeight:Number($('#startWeight').value),currentWeight:Number($('#currentWeight').value),goalWeight:Number($('#goalWeight').value)};if(n.height<100||n.height>250||n.age<13||n.age>110||[n.startWeight,n.currentWeight,n.goalWeight].some(v=>v<25||v>350)){alert('入力値を確認してください。');return}data.profile=n;save();render()});
+ document.querySelectorAll('.deleteMeal').forEach(b=>b.addEventListener('click',()=>{data.meals=data.meals.filter(m=>m.id!==b.dataset.id);save();render()}));
+ document.querySelectorAll('.deleteWeight').forEach(b=>b.addEventListener('click',()=>{data.weights=data.weights.filter(w=>w.id!==b.dataset.id);save();render()}));
+ $('#exportData')?.addEventListener('click',()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='calorie-tuner-backup.json';a.click();URL.revokeObjectURL(url)});
+ $('#importFile')?.addEventListener('change',async e=>{const f=e.target.files?.[0];if(!f)return;try{const incoming=JSON.parse(await f.text());if(!incoming.profile||!Array.isArray(incoming.meals)||!Array.isArray(incoming.weights))throw Error();data={...defaults,...incoming};save();render();alert('バックアップを読み込みました。')}catch{alert('バックアップファイルを読み込めませんでした。')}});
+ $('#clearData')?.addEventListener('click',()=>{if(confirm('食事・体重・プロフィールを含む全データを削除しますか？')){localStorage.removeItem('calorieTuner');data=load();photoData='';render()}});
+}
+async function resizeImage(file){return new Promise(resolve=>{const reader=new FileReader();reader.onload=()=>{const img=new Image();img.onload=()=>{const max=1200,scale=Math.min(1,max/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);c.getContext('2d').drawImage(img,0,0,c.width,c.height);resolve(c.toDataURL('image/jpeg',.82))};img.src=reader.result};reader.readAsDataURL(file)})}
+async function estimateAI(){
+ const status=$('#aiStatus');
+ if(!photoData){status.textContent='先に食事の写真を選んでください。';return}
+ if(!data.aiEndpoint){status.textContent='AI接続先が未設定です。接続設定を開いてURLを登録してください。AI未接続でも料理名とカロリーは手入力できます。';return}
+ status.textContent='AIに写真を送信しています…';
+ try{
+   const blob=await (await fetch(photoData)).blob(),form=new FormData();form.append('image',blob,'meal.jpg');
+   const res=await fetch(data.aiEndpoint,{method:'POST',body:form});
+   if(!res.ok)throw new Error('サーバー応答 '+res.status);
+   const result=await res.json();
+   if(!result.mealName||!Number.isFinite(Number(result.calories)))throw new Error('応答JSONの形式が違います');
+   $('#mealName').value=result.mealName;$('#mealCalories').value=Math.round(Number(result.calories));
+   status.textContent=result.explanation||'AIの推定値です。量や調理油を確認してから保存してください。';
+ }catch(e){status.textContent='AI判定に失敗しました：'+e.message+'。HTTPS接続・CORS・サーバー仕様を確認するか、手入力してください。'}
+}
+function setTab(tab){activeTab=tab;document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));render();window.scrollTo({top:0,behavior:'smooth'})}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.tab)));
+render();
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(err => console.warn('オフライン機能の登録に失敗:', err)));
+}
+</script>
+</body>
+</html>

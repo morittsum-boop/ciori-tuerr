@@ -1,0 +1,16 @@
+{
+  "id": "./",
+  "name": "カロリーチューナー",
+  "short_name": "カロリーチューナー",
+  "description": "食事・歩数・体重を記録して、消費カロリーを調整するアプリ",
+  "lang": "ja-JP",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f7f5",
+  "theme_color": "#147d64",
+  "icons": [
+    {"src":"icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
+    {"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"}
+  ]
+}
